@@ -8,6 +8,11 @@ There are only 5 colors: Red, Blue, Yellow, Green, and Purple
 
 If you like to add more colors, feel free to modify the codes.
 
+*Netbeans IDE sometimes has minor error with not organizing text files correctly.
+
+*Please build and clean, then click run. Close tabs that are open. Please re-run and play.
+
+*This error only happens when you first run it, but does not happen again once you re-run the source code
 
 General rules:
 
