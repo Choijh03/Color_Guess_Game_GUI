@@ -11,9 +11,13 @@ If you like to add more colors, feel free to modify the codes.
 
 General rules:
 
+- Each correct guess gets 100 points, each wrong guess gets 0 points
+
 - User need to click correct colored button based on text, not the color of the text
-- You can try as many times as you like with try again button
-- To end the game, simply clikc end button
+
+- User can play upto 5 rounds
+
+- To end the game, simply clikc exit button
 
 GUI looks:
 
@@ -21,5 +25,7 @@ GUI looks:
 ![2](https://user-images.githubusercontent.com/98497929/191654692-50826785-a6b6-4024-9693-ba9f983c13ab.PNG)
 ![3](https://user-images.githubusercontent.com/98497929/191654700-28ef1806-373d-48ad-ac27-e7e884cd2e03.PNG)
 ![4](https://user-images.githubusercontent.com/98497929/191654706-43145056-8194-42eb-8efe-85640cc065e4.PNG)
+![캡처](https://user-images.githubusercontent.com/98497929/191700167-78165804-dd32-4942-a64f-0bb5083afef7.PNG)
+
 
 
