@@ -5,8 +5,15 @@
 package com.mycompany.testing;
 
 import java.awt.Color;
-import java.util.Arrays;
+import java.io.File;
 import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileReader;
+
 
 
 /**
@@ -18,6 +25,13 @@ public class NewJFrame extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame
      */   
+    private String roundString ="";
+    private int round = 0;
+    private String scoreString = "";
+    private int day, month,year; //used for clock
+    private int hour, minute, second; //used for clock
+    private String daystr,timestr; //usedf for jlabel and clock
+    private int score =0;
     private int[] newButtons = new int[5];
     private int buttonCounter = 5;
     private String answer ="";
@@ -44,11 +58,166 @@ public class NewJFrame extends javax.swing.JFrame {
         this.setBounds(0, 0, 610, 435); //setting the bound
         this.setLocationRelativeTo(null); //setting the screen to center
         textLabel();
-        newButtons = randomButton();      
-        System.out.println(Arrays.toString(newButtons));          
-        colorController(newButtons);                                      
+        newButtons = randomButton();                  
+        colorController(newButtons);     
+        currentTime(); //calling clokc function
+        read("current_score.txt");
+        System.out.println(score);
+        read_roundCounter("round_counter.txt");
+        System.out.println(round);
+        
+        if(round ==0)
+        {
+            this.setVisible(false);
+            this.dispose();
+            new Score().setVisible(true);            
+        }
+        
     }
     
+    public void read(String filename)
+    {
+       try {
+            FileReader reader = new FileReader(filename);
+            int character;
+ 
+            while ((character = reader.read()) != -1) {                   
+                scoreString += (char)character;
+            }
+            score = Integer.parseInt(scoreString);
+            reader.close();
+ 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void read_roundCounter(String filename)
+    {
+       try {
+            FileReader reader = new FileReader(filename);
+            int character;
+ 
+            while ((character = reader.read()) != -1) {                   
+                roundString += (char)character;
+            }
+            round = Integer.parseInt(roundString);
+            reader.close();
+ 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    // method: write
+    // purpose: this method is to write to the score information to file named "current_socre.txt
+    public void write_roundCounter(String current_round)
+    {
+        try  
+    {         
+        File f= new File("round_counter.txt");  //file to be delete  
+        if(f.delete())                      //returns Boolean value  
+        {  
+            System.out.println(f.getName() + " deleted");   //getting and printing the file name  
+        }  
+        else  
+        {  
+            System.out.println("failed");  
+        }  
+    }  
+    catch(Exception e)  
+    {  
+        e.printStackTrace();  
+    }  
+        
+    try {
+            FileWriter writer = new FileWriter("round_counter.txt", true);
+            writer.write(current_round);           
+            writer.close();
+        } 
+    catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    // method: write
+    // purpose: this method is to write to the score information to file named "current_socre.txt
+    public void write(String current_score)
+    {
+        try  
+    {         
+        File f= new File("current_score.txt");  //file to be delete  
+        if(f.delete())                      //returns Boolean value  
+        {  
+            System.out.println(f.getName() + " deleted");   //getting and printing the file name  
+        }  
+        else  
+        {  
+            System.out.println("failed");  
+        }  
+    }  
+    catch(Exception e)  
+    {  
+        e.printStackTrace();  
+    }  
+        
+    try {
+            FileWriter writer = new FileWriter("current_score.txt", true);
+            writer.write(current_score);           
+            writer.close();
+        } 
+    catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    // method: currentTime
+    // purpose: this method uses the Calendar and SimplDataFormat class to present correct local time on the screen
+    public void currentTime(){
+        
+        Thread clock = new Thread(){
+                public void run(){
+                    while(true)
+                {
+                    try{
+                        Calendar c = Calendar.getInstance();
+                        minute = c.get(Calendar.MINUTE);
+                        second = c.get(Calendar.SECOND);
+                        hour = c.get(Calendar.HOUR);
+                        if(hour>12)
+                        {
+                            hour = hour - 12;
+                        }
+                        day = c.get(Calendar.DAY_OF_MONTH);
+                        month = c.get(Calendar.MONTH);
+                        year = c.get(Calendar.YEAR);
+                        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+                        SimpleDateFormat sd = new SimpleDateFormat("dd-MM-yyyy");
+                        Date dat = c.getTime();
+                        timestr = sdf.format(dat);
+                        daystr = sd.format(dat);
+                        jLabel3.setText(timestr);
+                        jLabel2.setText(daystr);
+                        
+                    }catch(Exception e){
+                        
+                    }
+                }
+                        }
+           };
+            clock.start();
+    }
+    
+    
+    
+  
+   
     //method to control jlabel text
     public void textLabel()
     {
@@ -719,6 +888,8 @@ public class NewJFrame extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -770,6 +941,16 @@ public class NewJFrame extends javax.swing.JFrame {
         jButton7.setBounds(310, 160, 130, 60);
         jButton7.setVisible(false);
 
+        jButton1.setBorder(null);
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton1MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jButton1MouseExited(evt);
+            }
+        });
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -875,7 +1056,19 @@ public class NewJFrame extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("jLabel1");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(240, 20, 180, 40);
+        jLabel1.setBounds(230, 20, 120, 40);
+
+        jLabel2.setFont(new java.awt.Font("굴림", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("jLabel2");
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(340, 20, 110, 30);
+
+        jLabel3.setFont(new java.awt.Font("굴림", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("jLabel3");
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(460, 20, 140, 30);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -893,10 +1086,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);       
+        write_roundCounter(roundString);
         if(answer.equals(button1))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);          
         }
         else
         {
@@ -907,10 +1106,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button2))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -921,10 +1126,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button3))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -935,10 +1146,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button4))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -949,10 +1166,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button5))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -963,10 +1186,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button6))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -977,10 +1206,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button7))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -991,10 +1226,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button8))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1005,10 +1246,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button9))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1019,10 +1266,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button10))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1033,10 +1286,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button11))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1047,10 +1306,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button12))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1061,10 +1326,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button13))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1075,10 +1346,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button14))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1089,10 +1366,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button15))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1103,10 +1386,16 @@ public class NewJFrame extends javax.swing.JFrame {
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
         // TODO add your handling code here:
+        round--;
+        roundString = Integer.toString(round);
+        write_roundCounter(roundString);
         if(answer.equals(button16))
         {
            new Win().setVisible(true);
            this.setVisible(false);
+           score += 100;
+           scoreString = Integer.toString(score);
+           write(scoreString);
         }
         else
         {
@@ -1115,9 +1404,40 @@ public class NewJFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton16ActionPerformed
 
+    private void jButton1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseEntered
+        // TODO add your handling code here:
+        jButton1.setBackground(Color.lightGray);
+        
+    }//GEN-LAST:event_jButton1MouseEntered
+
+    private void jButton1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseExited
+        // TODO add your handling code here:
+        if(button1 == "Red")
+        {
+            jButton1.setBackground(Color.red);
+        }
+        else if(button1 == "Yellow")
+        {
+            jButton1.setBackground(Color.yellow);
+        }
+        else if(button1 == "Purple")
+        {
+            jButton1.setBackground(Color.magenta);
+        }
+        else if(button1 == "Green")
+        {
+            jButton1.setBackground(Color.green);
+        }
+        if(button1 == "Blue")
+        {
+            jButton1.setBackground(Color.blue);
+        }      
+    }//GEN-LAST:event_jButton1MouseExited
+
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1143,7 +1463,7 @@ public class NewJFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        //UIManager.setLookAndFeel("com.jtattoo.plaf.aluminium.AluminiumLookAndFel");
+       
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new NewJFrame().setVisible(true);
@@ -1169,6 +1489,8 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

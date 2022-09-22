@@ -3,19 +3,45 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.testing;
-
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.File;
 /**
  *
  * @author PC
  */
 public class Win extends javax.swing.JFrame {
-
+    String roundString = "";
+    int round = 0;
     /**
      * Creates new form Win
      */
     public Win() {
         initComponents();
         this.setLocationRelativeTo(null); //setting the screen to center
+        read_roundCounter("round_counter.txt");    
+        if(round ==0)
+        {           
+            jButton1.setEnabled(false);
+        }    
+    }
+    
+    public void read_roundCounter(String filename)
+    {
+       try {
+            FileReader reader = new FileReader(filename);
+            int character;
+ 
+            while ((character = reader.read()) != -1) {                   
+                roundString += (char)character;
+            }
+            round = Integer.parseInt(roundString);
+            reader.close();
+ 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -100,6 +126,7 @@ public class Win extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+      
         new NewJFrame().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -107,7 +134,7 @@ public class Win extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        this.dispose();
+        new Score().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
