@@ -16,6 +16,7 @@ General rules:
 - To end the game, simply clikc end button
 
 GUI looks:
+
 ![1](https://user-images.githubusercontent.com/98497929/191654687-7d4d11f6-8654-4f2b-9883-a49ab17f7008.PNG)
 ![2](https://user-images.githubusercontent.com/98497929/191654692-50826785-a6b6-4024-9693-ba9f983c13ab.PNG)
 ![3](https://user-images.githubusercontent.com/98497929/191654700-28ef1806-373d-48ad-ac27-e7e884cd2e03.PNG)
